@@ -35,7 +35,7 @@ def compile_local(tex_filename, pdf_filename):
 
 def compile_online(tex_filename, pdf_filename):
     print("Local pdflatex compile engine not found.")
-    print("Attempting to compile online using the free texlive.net API...")
+    print(f"Attempting to compile {tex_filename} online using the free texlive.net API...")
     
     try:
         with open(tex_filename, 'r', encoding='utf-8') as f:
@@ -84,24 +84,38 @@ def compile_online(tex_filename, pdf_filename):
         print(f"Error during online compilation: {e}")
         return False
 
-def compile_latex():
-    tex_filename = "request_letter.tex"
-    pdf_filename = "request_letter.pdf"
+def compile_file(tex_filename):
+    pdf_filename = tex_filename.replace(".tex", ".pdf")
     
-    if not os.path.exists(tex_filename):
-        print(f"Error: {tex_filename} not found.")
-        sys.exit(1)
-        
     # Try local compile first
     success = compile_local(tex_filename, pdf_filename)
     if not success:
         # Fall back to online compile
         success = compile_online(tex_filename, pdf_filename)
         
-    if not success:
-        print("\nFailed to compile LaTeX document. Please install MiKTeX/TeX Live or check your internet connection.")
+    return success
+
+def compile_all():
+    files = ["request_letter.tex", "recommendation_innovation_hub.tex", "recommendation_hod.tex"]
+    failed = []
+    
+    for f in files:
+        if not os.path.exists(f):
+            print(f"Error: {f} not found.")
+            failed.append(f)
+            continue
+            
+        print("-" * 50)
+        success = compile_file(f)
+        if not success:
+            failed.append(f)
+            
+    print("-" * 50)
+    if failed:
+        print(f"Compilation failed for: {', '.join(failed)}")
         sys.exit(1)
+    else:
+        print("All documents compiled successfully!")
 
 if __name__ == "__main__":
-    compile_latex()
-
+    compile_all()
