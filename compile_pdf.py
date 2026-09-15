@@ -96,7 +96,12 @@ def compile_file(tex_filename):
     return success
 
 def compile_all():
-    files = ["request_letter.tex", "recommendation_innovation_hub.tex", "recommendation_hod.tex"]
+    files = [
+        "request_letter.tex",
+        "recommendation_innovation_hub.tex",
+        "recommendation_hod.tex",
+        "undertaking_form.tex"
+    ]
     failed = []
     
     for f in files:
